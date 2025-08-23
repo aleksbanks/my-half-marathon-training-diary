@@ -1,10 +1,10 @@
-import { Button } from '@/shared/ui/Button/Button'
+import { RaceCountdown } from '@/entities/race-countdown/RaceCountdown'
 
 function App() {
   return (
     <div>
       <h1>Running Diary</h1>
-      <Button onClick={() => console.log('Button clicked!')}>Start Running</Button>
+      <RaceCountdown />
     </div>
   )
 }
