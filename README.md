@@ -1,11 +1,113 @@
-# React + TypeScript + Vite
+# Running Diary
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A React application for tracking running activities and training progress. Built with TypeScript, Vite, and modern React patterns.
 
-Currently, two official plugins are available:
+## Features
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- **Race Countdown**: Smart countdown component that displays time until race start with proper English pluralization
+- **Modern Tech Stack**: React 19, TypeScript, Vite, ESLint, Prettier
+- **Clean Architecture**: Feature-based folder structure with entities, features, and shared components
+
+## Components
+
+### RaceCountdown
+
+A React component that displays a countdown to the half-marathon on December 14, 2025 at 6:00 AM.
+
+**Features:**
+
+- Smart formatting based on time remaining
+- Proper English pluralization (1 day vs 2 days)
+- Three display modes:
+  - More than 10 weeks: "3 months 1 week 6 days (14 training weeks)"
+  - 1-10 weeks: "6 weeks 1 day"
+  - Less than 1 week: "1 day 6 hours" or "4 hours"
+  - Very close to start: "Race starts soon!"
+
+## Getting Started
+
+### Prerequisites
+
+- Node.js 20.19+ or 22.12+ (required for Vite)
+- npm or yarn
+
+### Installation
+
+```bash
+# Clone the repository
+git clone <repository-url>
+cd running-diary
+
+# Install dependencies
+npm install
+```
+
+### Development
+
+```bash
+# Start development server
+npm run dev
+
+# Run tests
+npx tsx src/entities/race-countdown/RaceCountdown.test.ts
+
+# Lint code
+npm run lint
+
+# Format code
+npm run format
+```
+
+### Building
+
+```bash
+# Build for production
+npm run build
+
+# Preview production build
+npm run preview
+```
+
+## Project Structure
+
+```
+src/
+├── entities/           # Business entities
+│   └── race-countdown/ # Race countdown component
+├── features/           # Feature modules
+├── pages/             # Page components
+├── shared/            # Shared utilities and components
+│   ├── config/        # Configuration files
+│   ├── lib/           # Utility libraries
+│   ├── model/         # Type definitions
+│   └── ui/            # UI components
+└── App.tsx            # Main application component
+```
+
+## Testing
+
+The project includes comprehensive tests for the RaceCountdown component:
+
+```bash
+# Run component tests
+npx tsx src/entities/race-countdown/RaceCountdown.test.ts
+```
+
+Test cases cover various scenarios:
+
+- More than 10 weeks until race
+- 1-10 weeks until race
+- Less than 1 week until race
+- Hours and minutes before race start
+
+## Tech Stack
+
+- **React 19** - Latest React with new features
+- **TypeScript** - Type-safe development
+- **Vite** - Fast build tool and dev server
+- **date-fns** - Date manipulation library
+- **ESLint** - Code linting
+- **Prettier** - Code formatting
 
 ## Expanding the ESLint configuration
 
