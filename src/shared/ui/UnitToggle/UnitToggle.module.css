@@ -1,0 +1,62 @@
+.container {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.label {
+  font-weight: 500;
+  color: #374151;
+}
+
+.toggle {
+  position: relative;
+  display: flex;
+  align-items: center;
+  background: #e5e7eb;
+  border: none;
+  border-radius: 20px;
+  padding: 4px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  min-width: 120px;
+  height: 32px;
+}
+
+.toggle:hover {
+  background: #d1d5db;
+}
+
+.option {
+  flex: 1;
+  text-align: center;
+  font-weight: 500;
+  font-size: 14px;
+  color: #6b7280;
+  transition: color 0.3s ease;
+  z-index: 1;
+}
+
+.toggle.active .option:first-child {
+  color: #ffffff;
+}
+
+.toggle:not(.active) .option:last-child {
+  color: #ffffff;
+}
+
+.slider {
+  position: absolute;
+  top: 4px;
+  left: 4px;
+  width: calc(50% - 4px);
+  height: calc(100% - 8px);
+  background: #3b82f6;
+  border-radius: 16px;
+  transition: transform 0.3s ease;
+}
+
+.toggle.active .slider {
+  transform: translateX(100%);
+}

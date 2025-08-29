@@ -1,0 +1,53 @@
+.container {
+  max-width: 800px;
+}
+
+.weekList {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.cardContent {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.actions {
+  display: flex;
+  justify-content: flex-end;
+  padding-top: 16px;
+  border-top: 1px solid #e5e7eb;
+}
+
+.addButton {
+  background: #3b82f6;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 8px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.addButton:hover:not(.disabled) {
+  background: #2563eb;
+}
+
+.addButton.disabled {
+  background: #9ca3af;
+  cursor: not-allowed;
+}
+
+.loading,
+.error {
+  text-align: center;
+  padding: 40px;
+  color: #6b7280;
+}
+
+.error {
+  color: #dc2626;
+}

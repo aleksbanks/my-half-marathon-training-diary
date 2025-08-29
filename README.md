@@ -24,6 +24,19 @@ A React component that displays a countdown to the half-marathon on December 14,
   - Less than 1 week: "1 day 6 hours" or "4 hours"
   - Very close to start: "Race starts soon!"
 
+### WeekList
+
+A comprehensive component for managing weekly training plans with collapsible cards and progress tracking.
+
+**Features:**
+
+- **Collapsible Cards**: Each week plan in an expandable card
+- **Progress Tracking**: Visual progress bars showing completed vs planned distance
+- **Unit Toggle**: Switch between kilometers and miles with persistent storage
+- **Workout Management**: View workouts with dates, distances, and notes
+- **Smart Buttons**: Add workout button enabled only for current/future weeks
+- **Real-time Data**: Fetches from Supabase week_plans and workouts tables
+
 ## Getting Started
 
 ### Prerequisites
