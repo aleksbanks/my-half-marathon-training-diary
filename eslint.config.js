@@ -119,17 +119,22 @@ export default tseslint.config([
               position: 'before'
             },
             {
-              pattern: '../styles.module.css',
+              pattern: '@/*',
+              group: 'internal',
+              position: 'before'
+            },
+            {
+              pattern: '*/*.module.css',
               group: 'type',
               position: 'after'
             },
             {
-              pattern: './styles.module.css',
+              pattern: './*.module.css',
               group: 'type',
               position: 'after'
             }
           ],
-          pathGroupsExcludedImportTypes: ['react', './styles.module.css'],
+          pathGroupsExcludedImportTypes: ['react', './*.module.css'],
           alphabetize: {
             order: 'asc',
             caseInsensitive: true

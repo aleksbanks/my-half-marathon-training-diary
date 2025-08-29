@@ -1,6 +1,6 @@
 .card {
-  background: #ffffff;
-  border: 1px solid #e5e7eb;
+  background: var(--color-50);
+  border: 1px solid var(--color-200);
   border-radius: 12px;
   overflow: hidden;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
@@ -9,6 +9,7 @@
 
 .card:hover {
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  border-color: var(--pink-300);
 }
 
 .header {
@@ -17,12 +18,12 @@
   justify-content: space-between;
   padding: 16px 20px;
   cursor: pointer;
-  background: #f9fafb;
+  background: var(--color-100);
   transition: background-color 0.3s ease;
 }
 
 .header:hover {
-  background: #f3f4f6;
+  background: linear-gradient(135deg, var(--color-200), var(--pink-100));
 }
 
 .titleSection {
@@ -36,7 +37,7 @@
   margin: 0;
   font-size: 18px;
   font-weight: 600;
-  color: #111827;
+  color: var(--color-900);
 }
 
 .headerContent {
@@ -57,16 +58,17 @@
 }
 
 .toggleButton:hover {
-  background: #e5e7eb;
+  background: var(--pink-200);
 }
 
 .chevron {
-  color: #6b7280;
+  color: var(--color-600);
   transition: transform 0.3s ease;
 }
 
 .toggleButton.expanded .chevron {
   transform: rotate(180deg);
+  color: var(--pink-600);
 }
 
 .content {

@@ -1,9 +1,10 @@
 import { useEffect, useState } from 'react'
 
 import { fetchWeekPlansWithWorkouts } from './api'
-import styles from './WeekList.module.css'
 
 import type { WeekPlanWithWorkouts } from '@/shared/model/types'
+
+import styles from './WeekList.module.css'
 
 import { useDistanceUnitStore } from '@/shared/lib/distanceUnitStore'
 import { convertDistance } from '@/shared/lib/distanceUtils'
@@ -83,7 +84,6 @@ export const WeekList = () => {
           const progress = calculateWeekProgress(weekPlan)
           const canAdd = canAddWorkout(weekPlan)
 
-          console.log({ weekPlan, canAdd })
           return (
             <CollapsibleCard
               headerContent={<ProgressBar current={progress.current} total={progress.total} unit={unit} />}

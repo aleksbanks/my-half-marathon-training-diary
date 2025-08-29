@@ -2,19 +2,18 @@
   display: flex;
   align-items: center;
   gap: 12px;
-  margin-bottom: 20px;
 }
 
 .label {
   font-weight: 500;
-  color: #374151;
+  color: var(--color-50);
 }
 
 .toggle {
   position: relative;
   display: flex;
   align-items: center;
-  background: #e5e7eb;
+  background: var(--color-200);
   border: none;
   border-radius: 20px;
   padding: 4px;
@@ -25,7 +24,7 @@
 }
 
 .toggle:hover {
-  background: #d1d5db;
+  background: var(--color-300);
 }
 
 .option {
@@ -33,17 +32,17 @@
   text-align: center;
   font-weight: 500;
   font-size: 14px;
-  color: #6b7280;
+  color: var(--color-700);
   transition: color 0.3s ease;
   z-index: 1;
 }
 
 .toggle.active .option:first-child {
-  color: #ffffff;
+  color: var(--color-50);
 }
 
 .toggle:not(.active) .option:last-child {
-  color: #ffffff;
+  color: var(--color-50);
 }
 
 .slider {
@@ -52,7 +51,7 @@
   left: 4px;
   width: calc(50% - 4px);
   height: calc(100% - 8px);
-  background: #3b82f6;
+  background: linear-gradient(135deg, var(--color-400), var(--pink-400));
   border-radius: 16px;
   transition: transform 0.3s ease;
 }

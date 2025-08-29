@@ -14,24 +14,24 @@
 }
 
 .current {
-  color: #3b82f6;
+  color: var(--color-600);
 }
 
 .total {
-  color: #6b7280;
+  color: var(--color-700);
 }
 
 .bar {
   width: 100%;
   height: 8px;
-  background: #e5e7eb;
+  background: var(--color-300);
   border-radius: 4px;
   overflow: hidden;
 }
 
 .progress {
   height: 100%;
-  background: linear-gradient(90deg, #3b82f6, #1d4ed8);
+  background: linear-gradient(90deg, var(--color-500), var(--pink-500));
   border-radius: 4px;
   transition: width 0.3s ease;
 }
@@ -40,5 +40,5 @@
   text-align: right;
   font-size: 12px;
   font-weight: 600;
-  color: #374151;
+  color: var(--color-800);
 }

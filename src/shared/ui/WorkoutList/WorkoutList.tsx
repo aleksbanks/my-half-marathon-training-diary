@@ -1,6 +1,6 @@
-import styles from './WorkoutList.module.css'
-
 import type { Workout } from '@/shared/model/types'
+
+import styles from './WorkoutList.module.css'
 
 import { formatDate, formatWeekday } from '@/shared/lib/dateUtils'
 import { useDistanceUnitStore } from '@/shared/lib/distanceUnitStore'
