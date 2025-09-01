@@ -6,11 +6,23 @@ interface ButtonProps {
   variant?: 'primary' | 'secondary' | 'pink'
   type?: 'button' | 'submit' | 'reset'
   disabled?: boolean
+  size?: 'small' | 'medium' | 'large'
 }
 
-export const Button = ({ children, onClick, variant = 'primary', type = 'button', disabled = false }: ButtonProps) => {
+export const Button = ({
+  children,
+  onClick,
+  variant = 'primary',
+  type = 'button',
+  disabled = false,
+  size = 'medium'
+}: ButtonProps) => {
   return (
-    <button className={`${styles.button} ${styles[variant]}`} disabled={disabled} type={type} onClick={onClick}>
+    <button
+      className={`${styles.button} ${styles[variant]} ${styles[size]}`}
+      disabled={disabled}
+      type={type}
+      onClick={onClick}>
       {children}
     </button>
   )

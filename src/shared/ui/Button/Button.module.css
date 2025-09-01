@@ -10,7 +10,7 @@
   align-items: center;
   justify-content: center;
   gap: 0.5rem;
-  min-height: 44px;
+  min-height: 40px;
 }
 
 .button:disabled {
@@ -66,4 +66,16 @@
 .pink:active:not(:disabled) {
   transform: translateY(0);
   box-shadow: 0 2px 6px rgba(203, 51, 96, 0.2);
+}
+
+.small {
+  padding: 0.2rem 0.5rem;
+  font-size: 0.75rem;
+  min-height: 32px;
+}
+
+.large {
+  padding: 1.5rem 3rem;
+  font-size: 1rem;
+  min-height: 44px;
 }

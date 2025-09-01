@@ -15,6 +15,7 @@ export interface Interval {
   id: number
   name: string
   distance_km: number
+  distance_miles: number
   duration_min: number
   pace_km: number
   pace_miles: number

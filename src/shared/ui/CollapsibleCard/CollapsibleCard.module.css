@@ -20,6 +20,7 @@
   cursor: pointer;
   background: var(--color-100);
   transition: background-color 0.3s ease;
+  gap: 4px;
 }
 
 .header:hover {

@@ -59,3 +59,21 @@
 .toggle.active .slider {
   transform: translateX(100%);
 }
+
+.small {
+  min-width: 80px;
+  height: 24px;
+}
+
+.small .label {
+  font-size: 12px;
+}
+
+.small .option {
+  font-size: 12px;
+}
+
+.small .toggle {
+  width: calc(50%);
+  height: calc(100%);
+}
