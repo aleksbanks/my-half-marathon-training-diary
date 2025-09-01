@@ -58,7 +58,7 @@ export const RaceCountdown = () => {
         ? `${duration.hours} ${getPluralForm(duration.hours, SINGULAR_FORMS.hour, PLURAL_FORMS.hour)}`
         : ''
       const trainingWeeksText = weeks
-        ? `(${weeks} training ${getPluralForm(weeks, SINGULAR_FORMS.week, PLURAL_FORMS.week)})`
+        ? `(${weeks} full training ${getPluralForm(weeks, SINGULAR_FORMS.week, PLURAL_FORMS.week)})`
         : ''
 
       return [monthsText, weeksText, daysText, hoursText, trainingWeeksText].filter(Boolean).join(' ')
