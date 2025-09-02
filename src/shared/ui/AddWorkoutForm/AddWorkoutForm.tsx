@@ -122,11 +122,16 @@ export const AddWorkoutForm = memo(({ weekPlanId, onCancel, onSubmit }: AddWorko
       newErrors.date = 'Date is required'
     }
 
-    if (formData.distance_km <= 0) {
+    if (formData.type !== 'interval' && formData.type !== 'tempo' && formData.distance_km <= 0) {
       newErrors.distance = 'Distance must be greater than 0'
     }
 
-    if (formData.duration_minutes <= 0 && formData.duration_seconds <= 0) {
+    if (
+      formData.type !== 'interval' &&
+      formData.type !== 'tempo' &&
+      formData.duration_minutes <= 0 &&
+      formData.duration_seconds <= 0
+    ) {
       newErrors.duration = 'Duration must be greater than 0'
     }
 
@@ -153,6 +158,7 @@ export const AddWorkoutForm = memo(({ weekPlanId, onCancel, onSubmit }: AddWorko
     }
 
     setErrors(newErrors)
+
     return Object.keys(newErrors).length === 0
   }
 
