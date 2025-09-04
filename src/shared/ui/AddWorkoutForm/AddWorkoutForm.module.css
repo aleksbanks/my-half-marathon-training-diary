@@ -23,7 +23,7 @@
 .formGroup {
   display: flex;
   flex-direction: column;
-  gap: 0.5rem;
+  gap: 4px;
 }
 
 .label {
@@ -90,13 +90,15 @@
   border-radius: 8px;
   padding: 1rem;
   background-color: #f9fafb;
+  gap: 4px;
+  display: flex;
+  flex-direction: column;
 }
 
 .intervalsHeader {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 1rem;
 }
 
 .intervalsTitle {
@@ -139,11 +141,14 @@
 }
 
 .intervalForm {
+  display: flex;
+  flex-direction: column;
   border: 1px solid #d1d5db;
   border-radius: 6px;
-  padding: 1rem;
-  margin-bottom: 1rem;
+  padding: 12px;
+  margin-bottom: 8px;
   background-color: white;
+  gap: 4px;
   transition:
     border-color 0.2s ease,
     box-shadow 0.2s ease;
@@ -158,8 +163,7 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 1rem;
-  padding-bottom: 0.5rem;
+  margin-bottom: 0.2rem;
   border-bottom: 1px solid #e5e7eb;
 }
 

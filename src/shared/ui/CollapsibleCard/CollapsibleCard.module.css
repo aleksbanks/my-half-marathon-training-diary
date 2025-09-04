@@ -16,7 +16,7 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 16px 20px;
+  padding: 12px 18px;
   cursor: pointer;
   background: var(--color-100);
   transition: background-color 0.3s ease;
@@ -83,5 +83,5 @@
 }
 
 .contentInner {
-  padding: 20px;
+  padding: 12px 18px;
 }

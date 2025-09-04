@@ -1,4 +1,4 @@
-import { memo } from 'react'
+import { memo, useMemo } from 'react'
 
 import type { WeekPlanWithWorkouts } from '@/shared/model/types'
 
@@ -12,18 +12,29 @@ import { WorkoutList } from '@/shared/ui/WorkoutList/WorkoutList'
 interface WeekCardProps {
   weekPlan: WeekPlanWithWorkouts
   onAddWorkout: (weekPlan: WeekPlanWithWorkouts) => void
-  canAddWorkout: (weekPlan: WeekPlanWithWorkouts) => boolean
-  calculateProgress: (weekPlan: WeekPlanWithWorkouts) => {
-    current: number
-    total: number
-    percentage: number
-  }
 }
 
-export const WeekCard = memo(({ weekPlan, onAddWorkout, canAddWorkout, calculateProgress }: WeekCardProps) => {
+export const WeekCard = memo(({ weekPlan, onAddWorkout }: WeekCardProps) => {
   const { unit } = useDistanceUnitStore()
-  const progress = calculateProgress(weekPlan)
-  const canAdd = canAddWorkout(weekPlan)
+  const progress = useMemo(() => {
+    const plannedDistance = unit === 'km' ? weekPlan.planned_distance_km : weekPlan.planned_distance_miles
+    const totalWorkoutDistance = weekPlan.workouts.reduce(
+      (sum, workout) => sum + (unit === 'km' ? workout.distance_km : workout.distance_miles),
+      0
+    )
+    return {
+      current: totalWorkoutDistance,
+      total: plannedDistance,
+      percentage: Math.min((totalWorkoutDistance / plannedDistance) * 100, 100)
+    }
+  }, [weekPlan, unit])
+  const canAddWorkout = useMemo(() => {
+    const startDate = new Date(weekPlan.start_date)
+    const today = new Date()
+
+    // Разрешаем добавление тренировок только для текущей и прошлых недель (сегодняшняя дата больше или равна startDate)
+    return today >= startDate
+  }, [weekPlan.start_date])
 
   return (
     <CollapsibleCard
@@ -34,11 +45,11 @@ export const WeekCard = memo(({ weekPlan, onAddWorkout, canAddWorkout, calculate
 
         <div className={styles.actions}>
           <button
-            className={`${styles.addButton} ${!canAdd ? styles.disabled : ''}`}
-            disabled={!canAdd}
+            className={`${styles.addButton} ${!canAddWorkout ? styles.disabled : ''}`}
+            disabled={!canAddWorkout}
             type='button'
             onClick={() => onAddWorkout(weekPlan)}>
-            {canAdd ? 'Add Workout' : 'Week disabled'}
+            {canAddWorkout ? 'Add Workout' : 'Week disabled'}
           </button>
         </div>
       </div>

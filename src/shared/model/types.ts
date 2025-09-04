@@ -5,6 +5,7 @@ export interface WeekPlan {
   id: number
   week_number: number
   planned_distance_km: number
+  planned_distance_miles: number
   start_date: string
   end_date: string
   created_at: string

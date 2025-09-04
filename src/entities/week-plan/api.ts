@@ -61,11 +61,11 @@ export const createWorkout = async (workoutData: {
   let distanceKm = workoutData.distance_km
   let distanceMiles = workoutData.distance_miles
 
-  if (workoutData.distance_miles) {
-    distanceKm = workoutData.distance_miles / 1.60934
+  if (workoutData.distance_miles && !workoutData.distance_km) {
+    distanceKm = Number((workoutData.distance_miles / 1.60934).toFixed(2))
   }
-  if (workoutData.distance_km) {
-    distanceMiles = workoutData.distance_km / 1.60934
+  if (workoutData.distance_km && !workoutData.distance_miles) {
+    distanceMiles = Number((workoutData.distance_km / 1.60934).toFixed(2))
   }
 
   // Calculate total duration in minutes
@@ -78,14 +78,14 @@ export const createWorkout = async (workoutData: {
   const paceMiles = (totalDurationMinutes / distanceMiles).toFixed(2)
 
   // If we work with intervals, we need to calculate the total duration of the intervals with the rest periods
-  if (workoutData.intervals) {
+  if (workoutData.intervals?.length) {
     const totalDuration = workoutData.intervals.reduce((acc, interval) => {
       return acc + interval.duration_min + (interval.rest_duration_seconds || 0) / 60
     }, 0)
     totalDurationMinutes = totalDuration
   }
   // If we work with intervals, we need to calculate the total distance of the intervals
-  if (workoutData.intervals) {
+  if (workoutData.intervals?.length) {
     const totalDistanceKm = workoutData.intervals.reduce((acc, interval) => {
       return acc + interval.distance_km
     }, 0)
@@ -96,7 +96,7 @@ export const createWorkout = async (workoutData: {
     distanceMiles = totalDistanceMiles
   }
   // If we work with intervals, we need to calculate the total distance of the intervals
-  if (workoutData.intervals) {
+  if (workoutData.intervals?.length) {
     const totalDistance = workoutData.intervals.reduce((acc, interval) => {
       return acc + interval.distance_km
     }, 0)

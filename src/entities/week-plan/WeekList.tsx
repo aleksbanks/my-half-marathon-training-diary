@@ -9,7 +9,6 @@ import type { WorkoutFormData } from '@/shared/ui/AddWorkoutForm/AddWorkoutForm'
 import styles from './WeekList.module.css'
 
 import { useDistanceUnitStore } from '@/shared/lib/distanceUnitStore'
-import { convertDistance } from '@/shared/lib/distanceUtils'
 import { AddWorkoutModal } from '@/shared/ui/AddWorkoutModal/AddWorkoutModal'
 
 export const WeekList = () => {
@@ -36,33 +35,6 @@ export const WeekList = () => {
     loadWeekPlans()
   }, [])
 
-  const calculateWeekProgress = useCallback(
-    (weekPlan: WeekPlanWithWorkouts) => {
-      const totalWorkoutDistance =
-        weekPlans
-          .find((wp) => wp.id === weekPlan.id)
-          ?.workouts.reduce((sum, workout) => sum + workout.distance_km, 0) || 0
-
-      const plannedDistance = convertDistance(weekPlan.planned_distance_km, unit)
-      const currentDistance = convertDistance(totalWorkoutDistance, unit)
-
-      return {
-        current: currentDistance,
-        total: plannedDistance,
-        percentage: Math.min((totalWorkoutDistance / weekPlan.planned_distance_km) * 100, 100)
-      }
-    },
-    [weekPlans, unit]
-  )
-
-  const canAddWorkout = useCallback((weekPlan: WeekPlanWithWorkouts) => {
-    const startDate = new Date(weekPlan.start_date)
-    const today = new Date()
-
-    // Разрешаем добавление тренировок только для текущей и прошлых недель (сегодняшняя дата больше или равна startDate)
-    return today >= startDate
-  }, [])
-
   const handleAddWorkout = useCallback((weekPlan: WeekPlanWithWorkouts) => {
     setSelectedWeekPlan(weekPlan)
     setIsModalOpen(true)
@@ -75,7 +47,6 @@ export const WeekList = () => {
 
   const handleSubmitWorkout = useCallback(
     async (workoutData: WorkoutFormData) => {
-      console.log('workoutData', workoutData)
       if (!selectedWeekPlan) return
 
       try {
@@ -121,13 +92,7 @@ export const WeekList = () => {
     <div className={styles.container}>
       <div className={styles.weekList}>
         {weekPlans.map((weekPlan) => (
-          <WeekCard
-            calculateProgress={calculateWeekProgress}
-            canAddWorkout={canAddWorkout}
-            key={weekPlan.id}
-            weekPlan={weekPlan}
-            onAddWorkout={handleAddWorkout}
-          />
+          <WeekCard key={weekPlan.id} weekPlan={weekPlan} onAddWorkout={handleAddWorkout} />
         ))}
       </div>
 
