@@ -68,7 +68,7 @@ export const WeekList = () => {
           weekPlan.id === selectedWeekPlan.id ? { ...weekPlan, workouts: [...weekPlan.workouts, newWorkout] } : weekPlan
         )
       )
-    } catch {
+    } catch (error) {
       console.error('Failed to add workout:', error)
     }
   }
