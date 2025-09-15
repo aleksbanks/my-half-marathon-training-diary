@@ -1,9 +1,9 @@
 import { format, isAfter, isBefore, isSameDay, parseISO } from 'date-fns'
 
-// Format date to MM/DD/YYYY
-export const formatDate = (dateString: string): string => {
+// Format date with specified format
+export const formatDate = (dateString: string, formatString: string = 'MMM dd'): string => {
   const date = parseISO(dateString)
-  return format(date, 'MMM dd')
+  return format(date, formatString)
 }
 
 // Format date to EEEE

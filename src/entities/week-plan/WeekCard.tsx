@@ -4,6 +4,7 @@ import type { WeekPlanWithWorkouts, Workout } from '@/shared/model/types'
 
 import styles from './WeekList.module.css'
 
+import { formatDate } from '@/shared/lib/dateUtils'
 import { useDistanceUnitStore } from '@/shared/lib/distanceUnitStore'
 import { CollapsibleCard } from '@/shared/ui/CollapsibleCard/CollapsibleCard'
 import { ProgressBar } from '@/shared/ui/ProgressBar/ProgressBar'
@@ -42,6 +43,9 @@ export const WeekCard = memo(({ weekPlan, onAddWorkout, onWorkoutClick }: WeekCa
       headerContent={<ProgressBar current={progress.current} total={progress.total} unit={unit} />}
       title={`Week ${weekPlan.week_number}`}>
       <div className={styles.cardContent}>
+        <p className={styles.weekDays}>
+          <b>Days:</b> {formatDate(weekPlan.start_date)} - {formatDate(weekPlan.end_date)}
+        </p>
         <WorkoutList workouts={weekPlan.workouts} onWorkoutClick={onWorkoutClick} />
 
         <div className={styles.actions}>
