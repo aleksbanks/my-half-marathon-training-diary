@@ -1,6 +1,6 @@
 import { memo, useMemo } from 'react'
 
-import type { WeekPlanWithWorkouts } from '@/shared/model/types'
+import type { WeekPlanWithWorkouts, Workout } from '@/shared/model/types'
 
 import styles from './WeekList.module.css'
 
@@ -12,9 +12,10 @@ import { WorkoutList } from '@/shared/ui/WorkoutList/WorkoutList'
 interface WeekCardProps {
   weekPlan: WeekPlanWithWorkouts
   onAddWorkout: (weekPlan: WeekPlanWithWorkouts) => void
+  onWorkoutClick?: (workout: Workout) => void
 }
 
-export const WeekCard = memo(({ weekPlan, onAddWorkout }: WeekCardProps) => {
+export const WeekCard = memo(({ weekPlan, onAddWorkout, onWorkoutClick }: WeekCardProps) => {
   const { unit } = useDistanceUnitStore()
   const progress = useMemo(() => {
     const plannedDistance = unit === 'km' ? weekPlan.planned_distance_km : weekPlan.planned_distance_miles
@@ -41,7 +42,7 @@ export const WeekCard = memo(({ weekPlan, onAddWorkout }: WeekCardProps) => {
       headerContent={<ProgressBar current={progress.current} total={progress.total} unit={unit} />}
       title={`Week ${weekPlan.week_number}`}>
       <div className={styles.cardContent}>
-        <WorkoutList workouts={weekPlan.workouts} />
+        <WorkoutList workouts={weekPlan.workouts} onWorkoutClick={onWorkoutClick} />
 
         <div className={styles.actions}>
           <button

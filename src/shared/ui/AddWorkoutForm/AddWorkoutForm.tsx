@@ -7,6 +7,7 @@ import type { Interval, WorkoutType } from '@/shared/model/types'
 import styles from './AddWorkoutForm.module.css'
 
 import { useDistanceUnitStore } from '@/shared/lib/distanceUnitStore'
+import { WORKOUT_TYPE_INFO } from '@/shared/lib/workoutUtils'
 import { Button } from '@/shared/ui/Button/Button'
 
 interface AddWorkoutFormProps {
@@ -27,13 +28,12 @@ export interface WorkoutFormData {
   intervals?: Omit<Interval, 'id'>[]
 }
 
-const WORKOUT_TYPES: { value: WorkoutType; label: string }[] = [
-  { value: 'easy', label: 'Easy Run' },
-  { value: 'long', label: 'Long Run' },
-  { value: 'interval', label: 'Interval Training' },
-  { value: 'social', label: 'Social Run' },
-  { value: 'tempo', label: 'Tempo Run' }
-]
+const WORKOUT_TYPES: { value: WorkoutType; label: string }[] = Object.entries(WORKOUT_TYPE_INFO).map(
+  ([value, info]) => ({
+    value: value as WorkoutType,
+    label: info.name
+  })
+)
 
 const INTERVAL_WORKOUT_TYPES: WorkoutType[] = ['interval', 'tempo']
 

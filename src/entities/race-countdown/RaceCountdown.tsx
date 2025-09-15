@@ -2,7 +2,13 @@ import { useMemo } from 'react'
 
 import { differenceInDays, intervalToDuration } from 'date-fns'
 
+import styles from './RaceCountdown.module.css'
+
+const START_DATE = new Date(2025, 7, 25, 6, 0, 0) // August 25, 2025 at 6:00 AM
 const RACE_DATE = new Date(2025, 11, 14, 6, 0, 0) // December 14, 2025 at 6:00 AM
+
+const TOTAL_DAYS = differenceInDays(RACE_DATE, START_DATE)
+
 const WEEKS_THRESHOLD = 10 // Threshold for switching display format
 const DAYS_IN_WEEK = 7
 const SINGULAR_FORMS = {
@@ -57,11 +63,8 @@ export const RaceCountdown = () => {
       const hoursText = duration.hours
         ? `${duration.hours} ${getPluralForm(duration.hours, SINGULAR_FORMS.hour, PLURAL_FORMS.hour)}`
         : ''
-      const trainingWeeksText = weeks
-        ? `(${weeks} full training ${getPluralForm(weeks, SINGULAR_FORMS.week, PLURAL_FORMS.week)})`
-        : ''
 
-      return [monthsText, weeksText, daysText, hoursText, trainingWeeksText].filter(Boolean).join(' ')
+      return [monthsText, weeksText, daysText, hoursText].filter(Boolean).join(' ')
     }
 
     const weeksInMonth = Math.floor((totalDays || 0) / DAYS_IN_WEEK) || 0
@@ -75,11 +78,34 @@ export const RaceCountdown = () => {
     return [weeksText, daysText].filter(Boolean).join(' ')
   }, [duration.days, duration.hours, duration.months, totalDays, weeks])
 
+  const trainingWeeksText = useMemo(() => {
+    return weeks ? `${weeks} full training ${getPluralForm(weeks, SINGULAR_FORMS.week, PLURAL_FORMS.week)}` : ''
+  }, [weeks])
+
+  const currentDay = differenceInDays(now, START_DATE) + 1
+  const progressPercentage = Math.round((currentDay / TOTAL_DAYS) * 100)
+
   return (
-    <div>
-      <h2>Half Marathon Countdown</h2>
-      <h3>Race date: {RACE_DATE.toLocaleDateString()}</h3>
-      <h4>Until start: {formattedDuration}</h4>
+    <div className={styles.container}>
+      <h2 className={styles.title}>Half Marathon Countdown</h2>
+      <p className={styles.raceDate}>Race date: {RACE_DATE.toLocaleDateString()}</p>
+
+      <div className={styles.stats}>
+        <div className={styles.stat}>
+          <span className={styles.statLabel}>Time Remaining</span>
+          <span className={styles.statValue} title={trainingWeeksText}>
+            {formattedDuration}
+          </span>
+        </div>
+        <div className={styles.stat}>
+          <span className={styles.statLabel}>Progress</span>
+          <span
+            className={styles.statValue}
+            title={`Today is day ${currentDay} out of ${TOTAL_DAYS} days. ${progressPercentage}% done`}>
+            {differenceInDays(now, START_DATE) + 1}/{TOTAL_DAYS}
+          </span>
+        </div>
+      </div>
     </div>
   )
 }

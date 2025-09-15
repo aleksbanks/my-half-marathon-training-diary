@@ -1,15 +1,15 @@
-import { useCallback, useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 
 import { createWorkout, fetchWeekPlansWithWorkouts } from './api'
 import { WeekCard } from './WeekCard'
 
-import type { WeekPlanWithWorkouts } from '@/shared/model/types'
+import type { WeekPlanWithWorkouts, Workout } from '@/shared/model/types'
 import type { WorkoutFormData } from '@/shared/ui/AddWorkoutForm/AddWorkoutForm'
 
 import styles from './WeekList.module.css'
 
-import { useDistanceUnitStore } from '@/shared/lib/distanceUnitStore'
 import { AddWorkoutModal } from '@/shared/ui/AddWorkoutModal/AddWorkoutModal'
+import { WorkoutViewModal } from '@/shared/ui/WorkoutViewModal/WorkoutViewModal'
 
 export const WeekList = () => {
   const [weekPlans, setWeekPlans] = useState<WeekPlanWithWorkouts[]>([])
@@ -17,7 +17,8 @@ export const WeekList = () => {
   const [error, setError] = useState<string | null>(null)
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [selectedWeekPlan, setSelectedWeekPlan] = useState<WeekPlanWithWorkouts | null>(null)
-  const { unit } = useDistanceUnitStore()
+  const [isWorkoutViewOpen, setIsWorkoutViewOpen] = useState(false)
+  const [selectedWorkout, setSelectedWorkout] = useState<Workout | null>(null)
 
   useEffect(() => {
     const loadWeekPlans = async () => {
@@ -35,38 +36,42 @@ export const WeekList = () => {
     loadWeekPlans()
   }, [])
 
-  const handleAddWorkout = useCallback((weekPlan: WeekPlanWithWorkouts) => {
+  const handleAddWorkout = (weekPlan: WeekPlanWithWorkouts) => {
     setSelectedWeekPlan(weekPlan)
     setIsModalOpen(true)
-  }, [])
+  }
 
-  const handleCloseModal = useCallback(() => {
+  const handleCloseModal = () => {
     setIsModalOpen(false)
     setSelectedWeekPlan(null)
-  }, [])
+  }
 
-  const handleSubmitWorkout = useCallback(
-    async (workoutData: WorkoutFormData) => {
-      if (!selectedWeekPlan) return
+  const handleWorkoutClick = (workout: Workout) => {
+    setSelectedWorkout(workout)
+    setIsWorkoutViewOpen(true)
+  }
 
-      try {
-        const newWorkout = await createWorkout(workoutData)
+  const handleCloseWorkoutView = () => {
+    setIsWorkoutViewOpen(false)
+    setSelectedWorkout(null)
+  }
 
-        // Update the local state to include the new workout
-        setWeekPlans((prev) =>
-          prev.map((weekPlan) =>
-            weekPlan.id === selectedWeekPlan.id
-              ? { ...weekPlan, workouts: [...weekPlan.workouts, newWorkout] }
-              : weekPlan
-          )
+  const handleSubmitWorkout = async (workoutData: WorkoutFormData) => {
+    if (!selectedWeekPlan) return
+
+    try {
+      const newWorkout = await createWorkout(workoutData)
+
+      // Update the local state to include the new workout
+      setWeekPlans((prev) =>
+        prev.map((weekPlan) =>
+          weekPlan.id === selectedWeekPlan.id ? { ...weekPlan, workouts: [...weekPlan.workouts, newWorkout] } : weekPlan
         )
-      } catch (error) {
-        console.error('Failed to add workout:', error)
-        // You might want to show an error message to the user here
-      }
-    },
-    [selectedWeekPlan]
-  )
+      )
+    } catch (error) {
+      console.error('Failed to add workout:', error)
+    }
+  }
 
   if (loading) {
     return (
@@ -92,7 +97,12 @@ export const WeekList = () => {
     <div className={styles.container}>
       <div className={styles.weekList}>
         {weekPlans.map((weekPlan) => (
-          <WeekCard key={weekPlan.id} weekPlan={weekPlan} onAddWorkout={handleAddWorkout} />
+          <WeekCard
+            key={weekPlan.id}
+            weekPlan={weekPlan}
+            onAddWorkout={handleAddWorkout}
+            onWorkoutClick={handleWorkoutClick}
+          />
         ))}
       </div>
 
@@ -104,6 +114,10 @@ export const WeekList = () => {
           onClose={handleCloseModal}
           onSubmit={handleSubmitWorkout}
         />
+      )}
+
+      {isWorkoutViewOpen && (
+        <WorkoutViewModal isOpen={isWorkoutViewOpen} workout={selectedWorkout} onClose={handleCloseWorkoutView} />
       )}
     </div>
   )
