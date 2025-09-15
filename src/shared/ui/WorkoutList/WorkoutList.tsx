@@ -1,29 +1,18 @@
-import type { Workout, WorkoutType } from '@/shared/model/types'
+import type { Workout } from '@/shared/model/types'
 
 import styles from './WorkoutList.module.css'
 
 import { formatDate, formatWeekday } from '@/shared/lib/dateUtils'
 import { useDistanceUnitStore } from '@/shared/lib/distanceUnitStore'
+import { getWorkoutTypeInfo } from '@/shared/lib/workoutUtils'
+import workoutTypeStyles from '@/shared/ui/WorkoutType/WorkoutType.module.css'
 
 interface WorkoutListProps {
   workouts: Workout[]
+  onWorkoutClick?: (workout: Workout) => void
 }
 
-// Record object for workout type information
-const WORKOUT_TYPE_INFO: Record<WorkoutType, { name: string; className: string }> = {
-  easy: { name: 'Easy', className: styles.workoutTypeEasy },
-  long: { name: 'Long', className: styles.workoutTypeLong },
-  interval: { name: 'Interval', className: styles.workoutTypeInterval },
-  social: { name: 'Social', className: styles.workoutTypeSocial },
-  tempo: { name: 'Tempo', className: styles.workoutTypeTempo }
-} as const
-
-// Функция для получения названия и стилей типа тренировки
-const getWorkoutTypeInfo = (type: WorkoutType) => {
-  return WORKOUT_TYPE_INFO[type]
-}
-
-export const WorkoutList = ({ workouts }: WorkoutListProps) => {
+export const WorkoutList = ({ workouts, onWorkoutClick }: WorkoutListProps) => {
   const { unit } = useDistanceUnitStore()
 
   if (workouts.length === 0) {
@@ -42,7 +31,10 @@ export const WorkoutList = ({ workouts }: WorkoutListProps) => {
           const typeInfo = getWorkoutTypeInfo(workout.type)
 
           return (
-            <div className={styles.workout} key={workout.id}>
+            <div
+              className={`${styles.workout} ${onWorkoutClick ? styles.clickable : ''}`}
+              key={workout.id}
+              onClick={() => onWorkoutClick?.(workout)}>
               <div className={styles.dateInfo}>
                 <span className={styles.weekday}>{formatWeekday(workout.date)}</span>
                 <span className={styles.date}>{formatDate(workout.date)}</span>
@@ -50,7 +42,10 @@ export const WorkoutList = ({ workouts }: WorkoutListProps) => {
               <div className={styles.distance}>
                 {(unit === 'km' ? workout.distance_km : workout.distance_miles).toFixed(2)} {unit}
               </div>
-              <span className={`${styles.workoutType} ${typeInfo.className}`}>{typeInfo.name}</span>
+              <span
+                className={`${workoutTypeStyles.workoutType} ${workoutTypeStyles.workoutTypeCompact} ${workoutTypeStyles[typeInfo.className]}`}>
+                {typeInfo.name}
+              </span>
             </div>
           )
         })}
