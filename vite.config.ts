@@ -9,5 +9,18 @@ export default defineConfig({
     tsconfigPaths({
       projects: ['./tsconfig.app.json']
     })
-  ]
+  ],
+  build: {
+    outDir: 'dist',
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          react: ['react', 'react-dom'],
+          redux: ['@reduxjs/toolkit', 'react-redux', 'redux-persist'],
+          supabase: ['@supabase/supabase-js'],
+          dateUtils: ['date-fns']
+        }
+      }
+    }
+  }
 })
