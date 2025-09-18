@@ -2,8 +2,9 @@ import type { Workout } from '@/shared/model/types'
 
 import styles from './WorkoutView.module.css'
 
+import { useAppSelector } from '@/app/store/hooks'
+import { selectDistanceUnit } from '@/app/store/selectors/unitSelectors'
 import { formatDate, formatWeekday } from '@/shared/lib/dateUtils'
-import { useDistanceUnitStore } from '@/shared/lib/distanceUnitStore'
 import { formatDuration, formatPace, getWorkoutTypeInfo } from '@/shared/lib/workoutUtils'
 import workoutTypeStyles from '@/shared/ui/WorkoutType/WorkoutType.module.css'
 
@@ -12,7 +13,7 @@ interface WorkoutViewProps {
 }
 
 export const WorkoutView = ({ workout }: WorkoutViewProps) => {
-  const { unit } = useDistanceUnitStore()
+  const unit = useAppSelector(selectDistanceUnit)
   const typeInfo = getWorkoutTypeInfo(workout.type)
 
   const distance = unit === 'km' ? workout.distance_km : workout.distance_miles

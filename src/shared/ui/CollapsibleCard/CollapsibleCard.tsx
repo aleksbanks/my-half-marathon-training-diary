@@ -1,6 +1,10 @@
-import { memo, useState } from 'react'
+import { memo } from 'react'
 
 import styles from './CollapsibleCard.module.css'
+
+import { useAppDispatch, useAppSelector } from '@/app/store/hooks'
+import { selectIsCollapsibleCardExpanded } from '@/app/store/selectors/uiSelector'
+import { toggleCollapsibleCardExpanded } from '@/app/store/slices/uiSlice'
 
 interface CollapsibleCardProps {
   title: string
@@ -11,10 +15,12 @@ interface CollapsibleCardProps {
 
 export const CollapsibleCard = memo(
   ({ title, children, headerContent, defaultExpanded = false }: CollapsibleCardProps) => {
-    const [isExpanded, setIsExpanded] = useState(defaultExpanded)
+    const dispatch = useAppDispatch()
+    const cardId = `card-${title.replace(/\s+/g, '-').toLowerCase()}`
+    const isExpanded = useAppSelector((state) => selectIsCollapsibleCardExpanded(state, cardId)) ?? defaultExpanded
 
     const toggleExpanded = () => {
-      setIsExpanded(!isExpanded)
+      dispatch(toggleCollapsibleCardExpanded(cardId))
     }
 
     return (

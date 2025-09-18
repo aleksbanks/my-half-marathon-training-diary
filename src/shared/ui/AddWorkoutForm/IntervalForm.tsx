@@ -1,8 +1,12 @@
-import { memo, useState } from 'react'
+import { memo } from 'react'
 
-import type { DistanceUnit } from '@/shared/model/types'
+import type { DistanceUnit, Interval } from '@/shared/model/types'
 
 import styles from './AddWorkoutForm.module.css'
+
+import { useAppDispatch, useAppSelector } from '@/app/store/hooks'
+import { selectIsIntervalFormCollapsed } from '@/app/store/selectors/uiSelector'
+import { toggleIntervalFormCollapsed } from '@/app/store/slices/uiSlice'
 
 // Функция для конвертации десятичных минут в формат "минуты:секунды"
 const formatPace = (decimalMinutes: number): string => {
@@ -11,16 +15,9 @@ const formatPace = (decimalMinutes: number): string => {
   return `${minutes}:${seconds.toString().padStart(2, '0')}`
 }
 
-export interface IntervalFormData {
-  name: string
-  distance_km?: number
-  distance_miles?: number
+export type IntervalFormData = Omit<Interval, 'id' | 'duration_min'> & {
   duration_minutes: number
   duration_seconds: number
-  pace_km: number
-  pace_miles: number
-  has_rest_after: boolean
-  rest_duration_seconds: number
 }
 
 interface IntervalFormProps {
@@ -35,7 +32,13 @@ interface IntervalFormProps {
 
 export const IntervalForm = memo(
   ({ interval, index, onUpdate, onRemove, onCopy, onReorder, unit }: IntervalFormProps) => {
-    const [isCollapsed, setIsCollapsed] = useState(false)
+    const dispatch = useAppDispatch()
+
+    const isCollapsed = useAppSelector((state) => selectIsIntervalFormCollapsed(state, `interval-${index}`))
+
+    const handleToggleCollapsed = () => {
+      dispatch(toggleIntervalFormCollapsed(`interval-${index}`))
+    }
 
     const handleDragOver = (e: React.DragEvent) => {
       e.preventDefault()
@@ -112,7 +115,7 @@ export const IntervalForm = memo(
               aria-label={isCollapsed ? 'Expand interval' : 'Collapse interval'}
               className={styles.collapseButton}
               type='button'
-              onClick={() => setIsCollapsed(!isCollapsed)}>
+              onClick={handleToggleCollapsed}>
               <svg
                 className={`${styles.chevron} ${isCollapsed ? styles.collapsed : ''}`}
                 fill='none'

@@ -1,6 +1,5 @@
-import { useEffect, useState } from 'react'
+import { useEffect } from 'react'
 
-import { createWorkout, fetchWeekPlansWithWorkouts } from './api'
 import { WeekCard } from './WeekCard'
 
 import type { WeekPlanWithWorkouts, Workout } from '@/shared/model/types'
@@ -8,69 +7,56 @@ import type { WorkoutFormData } from '@/shared/ui/AddWorkoutForm/AddWorkoutForm'
 
 import styles from './WeekList.module.css'
 
+import { useAppDispatch, useAppSelector } from '@/app/store/hooks'
+import { selectIsAddWorkoutModalOpen, selectIsWorkoutViewModalOpen } from '@/app/store/selectors/uiSelector'
+import {
+  selectError,
+  selectLoading,
+  selectSelectedWeekPlan,
+  selectSelectedWorkout,
+  selectWeekPlans
+} from '@/app/store/selectors/weekPlansSelector'
+import { setAddWorkoutModalOpen, setWorkoutViewModalOpen } from '@/app/store/slices/uiSlice'
+import { addWorkout, fetchWeekPlans, setSelectedWeekPlan, setSelectedWorkout } from '@/app/store/slices/weekPlansSlice'
 import { AddWorkoutModal } from '@/shared/ui/AddWorkoutModal/AddWorkoutModal'
 import { WorkoutViewModal } from '@/shared/ui/WorkoutViewModal/WorkoutViewModal'
 
 export const WeekList = () => {
-  const [weekPlans, setWeekPlans] = useState<WeekPlanWithWorkouts[]>([])
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState<string | null>(null)
-  const [isModalOpen, setIsModalOpen] = useState(false)
-  const [selectedWeekPlan, setSelectedWeekPlan] = useState<WeekPlanWithWorkouts | null>(null)
-  const [isWorkoutViewOpen, setIsWorkoutViewOpen] = useState(false)
-  const [selectedWorkout, setSelectedWorkout] = useState<Workout | null>(null)
+  const dispatch = useAppDispatch()
+  const weekPlans = useAppSelector(selectWeekPlans)
+  const loading = useAppSelector(selectLoading)
+  const error = useAppSelector(selectError)
+  const selectedWeekPlan = useAppSelector(selectSelectedWeekPlan)
+  const selectedWorkout = useAppSelector(selectSelectedWorkout)
+  const isAddWorkoutModalOpen = useAppSelector(selectIsAddWorkoutModalOpen)
+  const isWorkoutViewModalOpen = useAppSelector(selectIsWorkoutViewModalOpen)
 
   useEffect(() => {
-    const loadWeekPlans = async () => {
-      try {
-        setLoading(true)
-        const data = await fetchWeekPlansWithWorkouts()
-        setWeekPlans(data)
-      } catch (err) {
-        setError(err instanceof Error ? err.message : 'Failed to load week plans')
-      } finally {
-        setLoading(false)
-      }
-    }
-
-    loadWeekPlans()
-  }, [])
+    dispatch(fetchWeekPlans())
+  }, [dispatch])
 
   const handleAddWorkout = (weekPlan: WeekPlanWithWorkouts) => {
-    setSelectedWeekPlan(weekPlan)
-    setIsModalOpen(true)
+    dispatch(setSelectedWeekPlan(weekPlan))
+    dispatch(setAddWorkoutModalOpen(true))
   }
 
   const handleCloseModal = () => {
-    setIsModalOpen(false)
-    setSelectedWeekPlan(null)
+    dispatch(setAddWorkoutModalOpen(false))
+    dispatch(setSelectedWeekPlan(null))
   }
 
   const handleWorkoutClick = (workout: Workout) => {
-    setSelectedWorkout(workout)
-    setIsWorkoutViewOpen(true)
+    dispatch(setSelectedWorkout(workout))
+    dispatch(setWorkoutViewModalOpen(true))
   }
 
   const handleCloseWorkoutView = () => {
-    setIsWorkoutViewOpen(false)
-    setSelectedWorkout(null)
+    dispatch(setWorkoutViewModalOpen(false))
+    dispatch(setSelectedWorkout(null))
   }
 
   const handleSubmitWorkout = async (workoutData: WorkoutFormData) => {
-    if (!selectedWeekPlan) return
-
-    try {
-      const newWorkout = await createWorkout(workoutData)
-
-      // Update the local state to include the new workout
-      setWeekPlans((prev) =>
-        prev.map((weekPlan) =>
-          weekPlan.id === selectedWeekPlan.id ? { ...weekPlan, workouts: [...weekPlan.workouts, newWorkout] } : weekPlan
-        )
-      )
-    } catch (error) {
-      console.error('Failed to add workout:', error)
-    }
+    dispatch(addWorkout(workoutData))
   }
 
   if (loading) {
@@ -96,7 +82,7 @@ export const WeekList = () => {
   return (
     <div className={styles.container}>
       <div className={styles.weekList}>
-        {weekPlans.map((weekPlan) => (
+        {weekPlans.map((weekPlan: WeekPlanWithWorkouts) => (
           <WeekCard
             key={weekPlan.id}
             weekPlan={weekPlan}
@@ -108,7 +94,7 @@ export const WeekList = () => {
 
       {selectedWeekPlan && (
         <AddWorkoutModal
-          isOpen={isModalOpen}
+          isOpen={isAddWorkoutModalOpen}
           weekNumber={selectedWeekPlan.week_number}
           weekPlanId={selectedWeekPlan.id}
           onClose={handleCloseModal}
@@ -116,8 +102,8 @@ export const WeekList = () => {
         />
       )}
 
-      {isWorkoutViewOpen && (
-        <WorkoutViewModal isOpen={isWorkoutViewOpen} workout={selectedWorkout} onClose={handleCloseWorkoutView} />
+      {selectedWorkout && (
+        <WorkoutViewModal isOpen={isWorkoutViewModalOpen} workout={selectedWorkout} onClose={handleCloseWorkoutView} />
       )}
     </div>
   )
