@@ -2,8 +2,9 @@ import type { Workout } from '@/shared/model/types'
 
 import styles from './WorkoutList.module.css'
 
+import { useAppSelector } from '@/app/store/hooks'
+import { selectDistanceUnit } from '@/app/store/selectors/unitSelectors'
 import { formatDate, formatWeekday } from '@/shared/lib/dateUtils'
-import { useDistanceUnitStore } from '@/shared/lib/distanceUnitStore'
 import { getWorkoutTypeInfo } from '@/shared/lib/workoutUtils'
 import workoutTypeStyles from '@/shared/ui/WorkoutType/WorkoutType.module.css'
 
@@ -13,9 +14,9 @@ interface WorkoutListProps {
 }
 
 export const WorkoutList = ({ workouts, onWorkoutClick }: WorkoutListProps) => {
-  const { unit } = useDistanceUnitStore()
+  const unit = useAppSelector(selectDistanceUnit)
 
-  if (workouts.length === 0) {
+  if (!workouts.length) {
     return (
       <div className={styles.empty}>
         <p>No workouts recorded for this week</p>

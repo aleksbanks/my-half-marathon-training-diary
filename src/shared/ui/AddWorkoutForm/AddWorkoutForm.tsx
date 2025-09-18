@@ -1,12 +1,30 @@
-import { memo, useState } from 'react'
+import { memo, useEffect } from 'react'
 
 import { IntervalForm, type IntervalFormData } from './IntervalForm'
 
-import type { Interval, WorkoutType } from '@/shared/model/types'
+import type { WorkoutType } from '@/shared/model/types'
 
 import styles from './AddWorkoutForm.module.css'
 
-import { useDistanceUnitStore } from '@/shared/lib/distanceUnitStore'
+import { useAppDispatch, useAppSelector } from '@/app/store/hooks'
+import { selectDistanceUnit } from '@/app/store/selectors/unitSelectors'
+import {
+  selectErrors,
+  selectFormData,
+  selectIntervals,
+  selectIsSubmitting
+} from '@/app/store/selectors/workoutFormSelector'
+import {
+  addInterval,
+  copyInterval,
+  removeInterval,
+  reorderIntervals,
+  resetForm,
+  setErrors,
+  setSubmitting,
+  updateFormData,
+  updateInterval
+} from '@/app/store/slices/workoutFormSlice'
 import { WORKOUT_TYPE_INFO } from '@/shared/lib/workoutUtils'
 import { Button } from '@/shared/ui/Button/Button'
 
@@ -25,7 +43,7 @@ export interface WorkoutFormData {
   duration_minutes: number
   duration_seconds: number
   notes?: string
-  intervals?: Omit<Interval, 'id'>[]
+  intervals?: IntervalFormData[]
 }
 
 const WORKOUT_TYPES: { value: WorkoutType; label: string }[] = Object.entries(WORKOUT_TYPE_INFO).map(
@@ -38,81 +56,40 @@ const WORKOUT_TYPES: { value: WorkoutType; label: string }[] = Object.entries(WO
 const INTERVAL_WORKOUT_TYPES: WorkoutType[] = ['interval', 'tempo']
 
 export const AddWorkoutForm = memo(({ weekPlanId, onCancel, onSubmit }: AddWorkoutFormProps) => {
-  const { unit } = useDistanceUnitStore()
-  const [isSubmitting, setIsSubmitting] = useState(false)
-  const [errors, setErrors] = useState<Record<string, string>>({})
+  const dispatch = useAppDispatch()
+  const unit = useAppSelector(selectDistanceUnit)
+  const isSubmitting = useAppSelector(selectIsSubmitting)
+  const errors = useAppSelector(selectErrors)
+  const formData = useAppSelector(selectFormData)
+  const intervals = useAppSelector(selectIntervals)
 
-  const [formData, setFormData] = useState<Omit<WorkoutFormData, 'week_plan_id'>>({
-    date: new Date().toISOString().split('T')[0],
-    type: 'easy',
-    distance_km: 0,
-    distance_miles: 0,
-    duration_minutes: 0,
-    duration_seconds: 0,
-    notes: '',
-    intervals: []
-  })
+  useEffect(() => {
+    // Reset form when component mounts
+    dispatch(resetForm())
+  }, [dispatch])
 
-  const [intervals, setIntervals] = useState<IntervalFormData[]>([])
-
-  const handleInputChange = (field: keyof typeof formData, value: string | number) => {
-    let distanceKm = formData.distance_km
-    let distanceMiles = formData.distance_miles
-    if (field === 'distance_km') {
-      distanceKm = value as number
-      distanceMiles = Number(((value as number) / 1.60934).toFixed(2))
-    }
-    if (field === 'distance_miles') {
-      distanceKm = Number(((value as number) * 1.60934).toFixed(2))
-      distanceMiles = value as number
-    }
-
-    setFormData((prev) => ({ ...prev, [field]: value, distance_km: distanceKm, distance_miles: distanceMiles }))
-    // Clear error when user starts typing
-    if (errors[field]) {
-      setErrors((prev) => ({ ...prev, [field]: '' }))
-    }
+  const handleInputChange = (field: keyof WorkoutFormData, value: string | number) => {
+    dispatch(updateFormData({ field, value }))
   }
 
   const handleAddInterval = () => {
-    const newInterval: IntervalFormData = {
-      name: '',
-      distance_km: 0,
-      distance_miles: 0,
-      duration_minutes: 0,
-      duration_seconds: 0,
-      pace_km: 0,
-      pace_miles: 0,
-      has_rest_after: false,
-      rest_duration_seconds: 60
-    }
-    setIntervals([...intervals, newInterval])
+    dispatch(addInterval())
   }
 
   const handleUpdateInterval = (index: number, data: IntervalFormData) => {
-    const newIntervals = [...intervals]
-    newIntervals[index] = data
-    setIntervals(newIntervals)
+    dispatch(updateInterval({ index, data }))
   }
 
   const handleRemoveInterval = (index: number) => {
-    setIntervals(intervals.filter((_, i) => i !== index))
+    dispatch(removeInterval(index))
   }
 
   const handleCopyInterval = (index: number) => {
-    const intervalToCopy = intervals[index]
-    const newInterval: IntervalFormData = {
-      ...intervalToCopy,
-      name: `${intervalToCopy.name} (Copy)`
-    }
-    setIntervals([...intervals, newInterval])
+    dispatch(copyInterval(index))
   }
 
   const handleReorderIntervals = (fromIndex: number, toIndex: number) => {
-    const newIntervals = [...intervals]
-    const [movedInterval] = newIntervals.splice(fromIndex, 1)
-    newIntervals.splice(toIndex, 0, movedInterval)
-    setIntervals(newIntervals)
+    dispatch(reorderIntervals({ fromIndex, toIndex }))
   }
 
   const validateForm = (): boolean => {
@@ -150,14 +127,14 @@ export const AddWorkoutForm = memo(({ weekPlanId, onCancel, onSubmit }: AddWorko
           if (interval.duration_minutes <= 0 && interval.duration_seconds <= 0) {
             newErrors[`interval_${index}_duration`] = 'Interval duration must be greater than 0'
           }
-          if (interval.has_rest_after && interval.rest_duration_seconds < 0) {
+          if (interval.has_rest_after && (interval.rest_duration_seconds ?? 0) < 0) {
             newErrors[`interval_${index}_rest`] = 'Rest duration must be non-negative'
           }
         })
       }
     }
 
-    setErrors(newErrors)
+    dispatch(setErrors(newErrors))
 
     return Object.keys(newErrors).length === 0
   }
@@ -169,7 +146,7 @@ export const AddWorkoutForm = memo(({ weekPlanId, onCancel, onSubmit }: AddWorko
       return
     }
 
-    setIsSubmitting(true)
+    dispatch(setSubmitting(true))
     try {
       const workoutData: WorkoutFormData = {
         ...formData,
@@ -182,7 +159,8 @@ export const AddWorkoutForm = memo(({ weekPlanId, onCancel, onSubmit }: AddWorko
           name: interval.name,
           distance_km: interval.distance_km || 0,
           distance_miles: interval.distance_miles || 0,
-          duration_min: interval.duration_minutes + interval.duration_seconds / 60,
+          duration_minutes: interval.duration_minutes,
+          duration_seconds: interval.duration_seconds,
           pace_km: interval.pace_km,
           pace_miles: interval.pace_miles,
           has_rest_after: interval.has_rest_after,
@@ -194,7 +172,7 @@ export const AddWorkoutForm = memo(({ weekPlanId, onCancel, onSubmit }: AddWorko
     } catch (error) {
       console.error('Failed to add workout:', error)
     } finally {
-      setIsSubmitting(false)
+      dispatch(setSubmitting(false))
     }
   }
 

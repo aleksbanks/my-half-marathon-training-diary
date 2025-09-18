@@ -4,8 +4,9 @@ import type { WeekPlanWithWorkouts, Workout } from '@/shared/model/types'
 
 import styles from './WeekList.module.css'
 
+import { useAppSelector } from '@/app/store/hooks'
+import { selectDistanceUnit } from '@/app/store/selectors/unitSelectors'
 import { formatDate } from '@/shared/lib/dateUtils'
-import { useDistanceUnitStore } from '@/shared/lib/distanceUnitStore'
 import { CollapsibleCard } from '@/shared/ui/CollapsibleCard/CollapsibleCard'
 import { ProgressBar } from '@/shared/ui/ProgressBar/ProgressBar'
 import { WorkoutList } from '@/shared/ui/WorkoutList/WorkoutList'
@@ -17,7 +18,7 @@ interface WeekCardProps {
 }
 
 export const WeekCard = memo(({ weekPlan, onAddWorkout, onWorkoutClick }: WeekCardProps) => {
-  const { unit } = useDistanceUnitStore()
+  const unit = useAppSelector(selectDistanceUnit)
   const progress = useMemo(() => {
     const plannedDistance = unit === 'km' ? weekPlan.planned_distance_km : weekPlan.planned_distance_miles
     const totalWorkoutDistance = weekPlan.workouts.reduce(
