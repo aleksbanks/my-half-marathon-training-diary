@@ -111,7 +111,7 @@ export const RaceCountdown = () => {
             <button
               aria-expanded={isChartShown}
               aria-label={isChartShown ? 'Collapse Weekly Distance Progress' : 'Expand chart'}
-              className={`${styles.toggleButton} ${isChartShown ? styles.expanded : ''}`}
+              className={`${styles.toggleButton} ${isChartShown ? styles.toggleButtonExpanded : ''}`}
               title={isChartShown ? 'Collapse chart' : 'Expand chart'}
               type='button'
               onClick={() => setIsChartShown((prev) => !prev)}>
@@ -134,8 +134,9 @@ export const RaceCountdown = () => {
         </div>
       </div>
 
-      {Boolean(weekPlans.length) && isChartShown && (
-        <div className={`${styles.stats} ${styles.chartStats}`}>
+      {Boolean(weekPlans.length) && (
+        <div
+          className={`${styles.stats} ${styles.chartStats} ${styles.chartContainer} ${isChartShown ? styles.chartContainerOpen : ''}`}>
           <WeeklyProgressChart weekPlans={weekPlans} />
         </div>
       )}

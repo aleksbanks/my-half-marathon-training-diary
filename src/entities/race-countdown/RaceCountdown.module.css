@@ -39,6 +39,20 @@
   display: unset;
 }
 
+.chartContainer {
+  overflow: hidden;
+  transition:
+    max-height 0.3s ease-in-out,
+    opacity 0.3s ease-in-out;
+  max-height: 0;
+  opacity: 0;
+}
+
+.chartContainerOpen {
+  max-height: 1000px;
+  opacity: 1;
+}
+
 .stat {
   display: flex;
   flex-direction: column;
@@ -111,7 +125,7 @@
   transition: transform 0.3s ease;
 }
 
-.toggleButton.expanded .chevron {
+.toggleButtonExpanded .chevron {
   transform: rotate(180deg);
   color: var(--pink-600);
 }
