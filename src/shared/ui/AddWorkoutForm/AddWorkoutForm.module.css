@@ -10,14 +10,14 @@
   align-items: center;
   margin-bottom: 1rem;
   padding-bottom: 1rem;
-  border-bottom: 1px solid #e5e7eb;
+  border-bottom: 1px solid var(--color-200);
 }
 
 .formHeader h2 {
   margin: 0;
   font-size: 1.5rem;
   font-weight: 600;
-  color: #111827;
+  color: var(--color-800);
 }
 
 .formGroup {
@@ -28,7 +28,7 @@
 
 .label {
   font-weight: 500;
-  color: #374151;
+  color: var(--color-700);
   font-size: 0.875rem;
 }
 
@@ -36,7 +36,7 @@
 .select,
 .textarea {
   padding: 0.75rem;
-  border: 1px solid #d1d5db;
+  border: 1px solid var(--color-200);
   border-radius: 6px;
   font-size: 0.875rem;
   transition:
@@ -48,25 +48,25 @@
 .select:focus,
 .textarea:focus {
   outline: none;
-  border-color: #3b82f6;
+  border-color: var(--blue-500);
   box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
 }
 
 .input.error,
 .select.error,
 .textarea.error {
-  border-color: #ef4444;
+  border-color: var(--red-500);
 }
 
 .input.error:focus,
 .select.error:focus,
 .textarea.error:focus {
-  border-color: #ef4444;
+  border-color: var(--red-500);
   box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.1);
 }
 
 .errorText {
-  color: #ef4444;
+  color: var(--red-500);
   font-size: 0.75rem;
   margin-top: 0.25rem;
 }
@@ -82,14 +82,14 @@
   justify-content: flex-end;
   margin-top: 1rem;
   padding-top: 1rem;
-  border-top: 1px solid #e5e7eb;
+  border-top: 1px solid var(--color-200);
 }
 
 .intervalsSection {
-  border: 1px solid #e5e7eb;
+  border: 1px solid var(--color-200);
   border-radius: 8px;
   padding: 1rem;
-  background-color: #f9fafb;
+  background-color: var(--color-100);
   gap: 4px;
   display: flex;
   flex-direction: column;
@@ -111,7 +111,7 @@
   margin: 0;
   font-size: 1.125rem;
   font-weight: 600;
-  color: #374151;
+  color: var(--color-700);
 }
 
 .collapseButton {
@@ -119,7 +119,7 @@
   border: none;
   cursor: pointer;
   font-size: 1rem;
-  color: #6b7280;
+  color: var(--color-500);
   padding: 0.25rem;
   border-radius: 4px;
   transition:
@@ -128,13 +128,13 @@
 }
 
 .collapseButton:hover {
-  color: #374151;
-  background-color: #f3f4f6;
+  color: var(--color-700);
+  background-color: var(--color-100);
 }
 
 .noIntervals {
   text-align: center;
-  color: #6b7280;
+  color: var(--color-500);
   font-style: italic;
   padding: 2rem;
   margin: 0;
@@ -143,11 +143,11 @@
 .intervalForm {
   display: flex;
   flex-direction: column;
-  border: 1px solid #d1d5db;
+  border: 1px solid var(--color-200);
   border-radius: 6px;
   padding: 12px;
   margin-bottom: 8px;
-  background-color: white;
+  background-color: var(--color-50);
   gap: 4px;
   transition:
     border-color 0.2s ease,
@@ -155,7 +155,7 @@
 }
 
 .intervalForm.dragOver {
-  border-color: #3b82f6;
+  border-color: var(--blue-500);
   box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
 }
 
@@ -164,7 +164,7 @@
   justify-content: space-between;
   align-items: center;
   margin-bottom: 0.2rem;
-  border-bottom: 1px solid #e5e7eb;
+  border-bottom: 1px solid var(--color-200);
 }
 
 .intervalTitle {
@@ -175,7 +175,7 @@
 
 .dragHandle {
   cursor: grab;
-  color: #9ca3af;
+  color: var(--color-400);
   font-size: 1.25rem;
   user-select: none;
   padding: 0.25rem;
@@ -184,7 +184,7 @@
 }
 
 .dragHandle:hover {
-  color: #6b7280;
+  color: var(--color-500);
 }
 
 .dragHandle:active {
@@ -197,8 +197,8 @@
 }
 
 .addIntervalButton {
-  background: #3b82f6;
-  color: white;
+  background: var(--blue-500);
+  color: var(--color-50);
   border: none;
   padding: 0.5rem 1rem;
   border-radius: 6px;
@@ -209,7 +209,7 @@
 }
 
 .addIntervalButton:hover {
-  background: #2563eb;
+  background: var(--blue-600);
 }
 
 .iconButton {
@@ -229,7 +229,7 @@
 }
 
 .iconButton:hover {
-  background-color: #f3f4f6;
+  background-color: var(--color-100);
   transform: scale(1.05);
 }
 
@@ -238,16 +238,16 @@
 }
 
 .icon {
-  color: #6b7280;
+  color: var(--color-500);
   transition: color 0.2s ease;
 }
 
 .iconButton:hover .icon {
-  color: #374151;
+  color: var(--color-700);
 }
 
 .chevron {
-  color: #6b7280;
+  color: var(--color-500);
   transition:
     transform 0.2s ease,
     color 0.2s ease;
@@ -258,14 +258,14 @@
 }
 
 .collapseButton:hover .chevron {
-  color: #374151;
+  color: var(--color-700);
 }
 
 .intervalHeader h4 {
   margin: 0;
   font-size: 1rem;
   font-weight: 600;
-  color: #374151;
+  color: var(--color-700);
 }
 
 .checkboxLabel {
@@ -273,7 +273,7 @@
   align-items: center;
   gap: 0.5rem;
   font-weight: 500;
-  color: #374151;
+  color: var(--color-700);
   font-size: 0.875rem;
   cursor: pointer;
 }
@@ -303,15 +303,15 @@
 
 .durationLabel {
   font-size: 0.75rem;
-  color: #6b7280;
+  color: var(--color-500);
   font-weight: 500;
   min-width: 2rem;
 }
 
 .paceDisplay {
   padding: 0.75rem;
-  background-color: #f3f4f6;
-  border: 1px solid #d1d5db;
+  background-color: var(--color-100);
+  border: 1px solid var(--color-200);
   border-radius: 6px;
   min-height: 2.75rem;
   display: flex;
@@ -320,6 +320,6 @@
 
 .paceValue {
   font-size: 0.875rem;
-  color: #374151;
+  color: var(--color-700);
   font-weight: 500;
 }

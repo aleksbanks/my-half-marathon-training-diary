@@ -8,7 +8,7 @@ import { useAppDispatch, useAppSelector } from '@/app/store/hooks'
 import { selectIsIntervalFormCollapsed } from '@/app/store/selectors/uiSelector'
 import { toggleIntervalFormCollapsed } from '@/app/store/slices/uiSlice'
 
-// Функция для конвертации десятичных минут в формат "минуты:секунды"
+// Convert decimal minutes to "minutes:seconds" format
 const formatPace = (decimalMinutes: number): string => {
   const minutes = Math.floor(decimalMinutes)
   const seconds = Math.round((decimalMinutes - minutes) * 60)

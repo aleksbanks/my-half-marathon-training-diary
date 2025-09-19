@@ -2,6 +2,7 @@ import { combineReducers, configureStore } from '@reduxjs/toolkit'
 import { type PersistConfig, persistReducer, persistStore } from 'redux-persist'
 import storage from 'redux-persist/lib/storage'
 
+import { authSlice } from './slices/authSlice'
 import { distanceUnitSlice } from './slices/distanceUnitSlice'
 import { uiSlice } from './slices/uiSlice'
 import { weekPlansSlice } from './slices/weekPlansSlice'
@@ -13,13 +14,14 @@ import { workoutFormSlice } from './slices/workoutFormSlice'
 const persistConfig: PersistConfig<RootState> = {
   key: 'root',
   storage,
-  whitelist: ['distanceUnit'] // Only distanceUnit is persisted in localStorage
+  whitelist: ['distanceUnit', 'auth'] // distanceUnit and auth are persisted in localStorage
 }
 
 /**
  * Root reducer for Redux
  */
 const rootReducer = combineReducers({
+  auth: authSlice.reducer,
   distanceUnit: distanceUnitSlice.reducer,
   weekPlans: weekPlansSlice.reducer,
   ui: uiSlice.reducer,
