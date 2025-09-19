@@ -1,0 +1,170 @@
+.authPage {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, var(--blue-500) 0%, var(--pink-400) 90%);
+  padding: 20px;
+}
+
+.authCard {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  background: var(--color-50);
+  border-radius: 16px;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+  width: 100%;
+  max-width: 400px;
+  text-align: center;
+}
+
+.title {
+  font-size: 28px;
+  font-weight: 700;
+  color: var(--color-800);
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+}
+
+.form:has(.roleSection) {
+  gap: 12px;
+}
+
+.roleSection {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.roleButtons {
+  display: flex;
+  gap: 12px;
+}
+
+.roleButton {
+  flex: 1;
+  padding: 12px 16px;
+  border: 2px solid var(--blue-200);
+  background: var(--blue-50);
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--blue-600);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.roleButton:hover {
+  border-color: var(--blue-400);
+  color: var(--blue-500);
+}
+
+.roleButton.active {
+  border-color: var(--blue-400);
+  background: var(--blue-400);
+  color: var(--blue-50);
+}
+
+.passwordSection {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  overflow: hidden;
+  transition: all 0.3s ease;
+}
+
+.passwordLabel {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--color-800);
+  text-align: left;
+}
+
+.passwordInput {
+  padding: 12px 16px;
+  border: 2px solid var(--blue-200);
+  border-radius: 8px;
+  font-size: 16px;
+  color: var(--blue-800);
+  transition: border-color 0.2s ease;
+}
+
+.passwordInput:focus {
+  outline: none;
+  border-color: var(--blue-400);
+}
+
+.loginButton {
+  padding: 14px 24px;
+  background: var(--blue-400);
+  color: var(--color-50);
+  border: none;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.loginButton:hover:not(:disabled) {
+  background: var(--blue-500);
+  transform: translateY(-1px);
+}
+
+.loginButton:disabled {
+  background: var(--blue-300);
+  cursor: not-allowed;
+  transform: none;
+}
+
+.error {
+  padding: 12px 16px;
+  background: var(--red-100);
+  border: 1px solid var(--red-300);
+  border-radius: 8px;
+  color: var(--red-700);
+  font-size: 14px;
+  text-align: left;
+}
+
+.loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.spinner {
+  width: 16px;
+  height: 16px;
+  border: 2px solid transparent;
+  border-top: 2px solid currentColor;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.roleInfo {
+  padding: 12px;
+  background: var(--blue-100);
+  border-radius: 8px;
+  font-size: 13px;
+  color: var(--blue-600);
+  text-align: left;
+}
+
+@media (max-width: 768px) {
+  .authCard {
+    padding: 16px;
+  }
+}
