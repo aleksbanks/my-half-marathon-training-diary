@@ -70,7 +70,7 @@ export const WorkoutView = ({ workout }: WorkoutViewProps) => {
               const duration = formatDuration(interval.duration_min)
               const pace = formatPace(unit === 'km' ? interval.pace_km : interval.pace_miles, unit)
               const rest = interval.rest_duration_seconds
-                ? formatDuration(Math.floor(interval.rest_duration_seconds / 60), interval.rest_duration_seconds % 60)
+                ? formatDuration(Math.ceil(interval.rest_duration_seconds / 60), interval.rest_duration_seconds % 60)
                 : ''
 
               return (

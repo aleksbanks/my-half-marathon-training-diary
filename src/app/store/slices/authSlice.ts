@@ -56,17 +56,14 @@ export const loginUser = createAsyncThunk(
  * Async thunk for initializing authentication when loading
  */
 export const initializeAuth = createAsyncThunk('auth/initialize', async (_, { rejectWithValue }) => {
-  console.log('initializeAuth')
   try {
     const user = await getCurrentUser()
-    console.log('user', user)
     if (!user) {
       return { user: null, role: null }
     }
 
     // Get user profile with role
     const profile = await getUserProfile(user.id)
-    console.log('profile', profile)
     if (!profile) {
       return rejectWithValue('User profile not found')
     }
@@ -117,7 +114,6 @@ export const authSlice = createSlice({
     builder
       // Login pending
       .addCase(loginUser.pending, (state) => {
-        console.log('loginUser.pending')
         state.isLoading = true
         state.error = null
       })
@@ -139,7 +135,6 @@ export const authSlice = createSlice({
       })
       // Initialize auth pending
       .addCase(initializeAuth.pending, (state) => {
-        console.log('initializeAuth.pending')
         state.isLoading = true
       })
       // Initialize auth fulfilled
