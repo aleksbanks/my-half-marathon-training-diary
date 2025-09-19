@@ -1,8 +1,13 @@
-import { useMemo } from 'react'
+import { useMemo, useState } from 'react'
 
 import { differenceInDays, intervalToDuration } from 'date-fns'
 
+import { WeeklyProgressChart } from '../weekly-progress-chart/WeeklyProgressChart'
+
 import styles from './RaceCountdown.module.css'
+
+import { useAppSelector } from '@/app/store/hooks'
+import { selectWeekPlans } from '@/app/store/selectors/weekPlansSelector'
 
 const START_DATE = new Date(2025, 7, 25, 6, 0, 0) // August 25, 2025 at 6:00 AM
 const RACE_DATE = new Date(2025, 11, 14, 6, 0, 0) // December 14, 2025 at 6:00 AM
@@ -25,6 +30,8 @@ const PLURAL_FORMS = {
 }
 
 export const RaceCountdown = () => {
+  const [isChartShown, setIsChartShown] = useState(false)
+
   const now = new Date()
   const duration = intervalToDuration({
     start: now,
@@ -33,6 +40,7 @@ export const RaceCountdown = () => {
 
   const totalDays = differenceInDays(RACE_DATE, now)
   const weeks = Math.floor(totalDays / DAYS_IN_WEEK)
+  const weekPlans = useAppSelector(selectWeekPlans)
 
   const getPluralForm = (count: number, singular: string, plural: string) => {
     return count === 1 ? singular : plural
@@ -98,7 +106,26 @@ export const RaceCountdown = () => {
           </span>
         </div>
         <div className={styles.stat}>
-          <span className={styles.statLabel}>Progress</span>
+          <span className={styles.statLabel}>
+            Progress
+            <button
+              aria-expanded={isChartShown}
+              aria-label={isChartShown ? 'Collapse Weekly Distance Progress' : 'Expand chart'}
+              className={`${styles.toggleButton} ${isChartShown ? styles.expanded : ''}`}
+              title={isChartShown ? 'Collapse chart' : 'Expand chart'}
+              type='button'
+              onClick={() => setIsChartShown((prev) => !prev)}>
+              <svg className={styles.chevron} fill='none' height='24' viewBox='0 0 20 20' width='24'>
+                <path
+                  d='M6 8L10 12L14 8'
+                  stroke='currentColor'
+                  strokeLinecap='round'
+                  strokeLinejoin='round'
+                  strokeWidth='1.3'
+                />
+              </svg>
+            </button>
+          </span>
           <span
             className={styles.statValue}
             title={`Today is day ${currentDay} out of ${TOTAL_DAYS} days. ${progressPercentage}% done`}>
@@ -106,6 +133,12 @@ export const RaceCountdown = () => {
           </span>
         </div>
       </div>
+
+      {Boolean(weekPlans.length) && isChartShown && (
+        <div className={`${styles.stats} ${styles.chartStats}`}>
+          <WeeklyProgressChart weekPlans={weekPlans} />
+        </div>
+      )}
     </div>
   )
 }
