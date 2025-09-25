@@ -1,6 +1,6 @@
 import { createSlice, type PayloadAction } from '@reduxjs/toolkit'
 
-import type { WorkoutType } from '@/shared/model/types'
+import type { Workout, WorkoutType } from '@/shared/model/types'
 import type { IntervalFormData } from '@/shared/ui/AddWorkoutForm/IntervalForm'
 
 interface WorkoutFormState {
@@ -113,6 +113,40 @@ export const workoutFormSlice = createSlice({
       state.intervals = []
       state.errors = {}
       state.isSubmitting = false
+    },
+    initializeFormForEdit: (state, action: PayloadAction<Workout>) => {
+      const workout = action.payload
+
+      // Convert duration_min to minutes and seconds
+      const totalMinutes = Math.floor(workout.duration_min)
+      const seconds = Math.round((workout.duration_min - totalMinutes) * 60)
+
+      // Convert intervals to form format
+      const formIntervals: IntervalFormData[] = workout.intervals.map((interval) => ({
+        name: interval.name,
+        distance_km: interval.distance_km,
+        distance_miles: interval.distance_miles,
+        duration_minutes: Math.floor(interval.duration_min),
+        duration_seconds: Math.round((interval.duration_min - Math.floor(interval.duration_min)) * 60),
+        pace_km: interval.pace_km,
+        pace_miles: interval.pace_miles,
+        has_rest_after: interval.has_rest_after || false,
+        rest_duration_seconds: interval.rest_duration_seconds || 60
+      }))
+
+      state.formData = {
+        date: workout.date,
+        type: workout.type,
+        distance_km: workout.distance_km,
+        distance_miles: workout.distance_miles,
+        duration_minutes: totalMinutes,
+        duration_seconds: seconds,
+        notes: workout.notes || '',
+        intervals: formIntervals
+      }
+      state.intervals = formIntervals
+      state.errors = {}
+      state.isSubmitting = false
     }
   }
 })
@@ -127,5 +161,6 @@ export const {
   removeInterval,
   copyInterval,
   reorderIntervals,
-  resetForm
+  resetForm,
+  initializeFormForEdit
 } = workoutFormSlice.actions

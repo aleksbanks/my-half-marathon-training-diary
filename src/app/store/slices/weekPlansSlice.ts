@@ -3,7 +3,7 @@ import { createAsyncThunk, createSlice, type PayloadAction } from '@reduxjs/tool
 import type { WeekPlanWithWorkouts, Workout } from '@/shared/model/types'
 import type { WorkoutFormData } from '@/shared/ui/AddWorkoutForm/AddWorkoutForm'
 
-import { createWorkout, fetchWeekPlansWithWorkouts } from '@/entities/week-plan/api'
+import { createWorkout, fetchWeekPlansWithWorkouts, updateWorkout } from '@/entities/week-plan/api'
 
 interface WeekPlansState {
   weekPlans: WeekPlanWithWorkouts[]
@@ -51,6 +51,26 @@ export const addWorkout = createAsyncThunk(
   }
 )
 
+export const updateWorkoutAction = createAsyncThunk(
+  'weekPlans/updateWorkout',
+  async ({ workoutId, workoutData }: { workoutId: number; workoutData: WorkoutFormData }, { rejectWithValue }) => {
+    try {
+      // Convert intervals to the format expected by the API
+      const intervals = workoutData.intervals?.map((interval) => ({
+        ...interval,
+        duration_min: interval.duration_minutes + interval.duration_seconds / 60
+      }))
+      const updatedWorkout = await updateWorkout(workoutId, {
+        ...workoutData,
+        intervals
+      })
+      return { updatedWorkout, weekPlanId: workoutData.week_plan_id }
+    } catch (error) {
+      return rejectWithValue(error instanceof Error ? error.message : 'Failed to update workout')
+    }
+  }
+)
+
 export const weekPlansSlice = createSlice({
   name: 'weekPlans',
   initialState,
@@ -88,6 +108,27 @@ export const weekPlansSlice = createSlice({
         )
       })
       .addCase(addWorkout.rejected, (state, action) => {
+        state.error = action.payload as string
+      })
+      // Update workout
+      .addCase(updateWorkoutAction.fulfilled, (state, action) => {
+        const { updatedWorkout, weekPlanId } = action.payload
+        state.weekPlans = state.weekPlans.map((weekPlan) =>
+          weekPlan.id === weekPlanId
+            ? {
+                ...weekPlan,
+                workouts: weekPlan.workouts.map((workout) =>
+                  workout.id === updatedWorkout.id ? updatedWorkout : workout
+                )
+              }
+            : weekPlan
+        )
+        // Update selectedWorkout if it's the same workout
+        if (state.selectedWorkout && state.selectedWorkout.id === updatedWorkout.id) {
+          state.selectedWorkout = updatedWorkout
+        }
+      })
+      .addCase(updateWorkoutAction.rejected, (state, action) => {
         state.error = action.payload as string
       })
   }
