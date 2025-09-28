@@ -116,3 +116,28 @@ export const getCurrentUser = async (): Promise<User | null> => {
     return null
   }
 }
+
+/**
+ * Refresh session token
+ */
+export const refreshSession = async (): Promise<{
+  user: User | null
+  session: { expires_at?: number } | null
+} | null> => {
+  try {
+    const {
+      data: { user, session },
+      error
+    } = await supabase.auth.refreshSession()
+
+    if (error) {
+      console.error('Error refreshing session:', error)
+      return null
+    }
+
+    return { user, session }
+  } catch (error) {
+    console.error('Error refreshing session:', error)
+    return null
+  }
+}
