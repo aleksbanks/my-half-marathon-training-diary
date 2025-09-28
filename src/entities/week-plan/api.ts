@@ -194,8 +194,7 @@ export const updateWorkout = async (
   delete updateData.duration_minutes
   delete updateData.duration_seconds
 
-  const { data, error } = await supabase.from('workouts').update(updateData).eq('id', workoutId).select().single()
-
+  const { data, error } = await supabase.from('workouts').update(updateData).eq('id', workoutId).select().maybeSingle()
   if (error) {
     throw new Error(`Error updating workout: ${error.message}`)
   }
